@@ -28,3 +28,10 @@ The trade-off: the User-Agent header is adversarial. Browsers lie about their id
 - **Browsers embedded in other browsers.** Edge and Opera UAs contain the `Chrome/` token. The parser checks for `Edg/` and `OPR/` first so it reports Edge and Opera, not Chrome.
 - **iOS version format.** iPhone UAs express the OS version with underscores (`17_1`); the parser normalises these to dots (`17.1`).
 - **Engine inference.** There is no `Blink` token in any UA string. The parser infers Blink from the browser being Chrome, Edge, or Opera. If you pass a custom Chromium-based browser that this parser does not recognise, `engine` will be `null`.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
